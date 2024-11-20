@@ -32,8 +32,10 @@ class ImportaComuniCommand extends Command
             file_put_contents($tempFile, $csvContent);
 
             $csv = Reader::createFromPath($tempFile, 'r');
-            $csv->setHeaderOffset(0);
+            $csv->setOutputBOM(Reader::BOM_UTF8);
+            $csv->addStreamFilter('convert.iconv.ISO-8859-15/UTF-8');
             $csv->setDelimiter(';');
+            $csv->setHeaderOffset(0);
 
             DB::beginTransaction();
 
@@ -45,43 +47,49 @@ class ImportaComuniCommand extends Command
             $records = $csv->getRecords();
             $regioni = [];
             $province = [];
+            $count = 0;
 
             foreach ($records as $record) {
+                $values = array_values($record);
+
                 // Gestione Regione
-                $codiceRegione = $record['Codice Regione'];
-                if (!isset($regioni[$codiceRegione])) {
+                $nomeRegione = $values[10];
+                if (!isset($regioni[$nomeRegione])) {
                     $regione = Regione::create([
-                        'nome' => $record['Denominazione Regione'],
-                        'codice_istat' => $codiceRegione,
+                        'nome' => $nomeRegione,
+                        'codice_istat' => $values[0],
                     ]);
-                    $regioni[$codiceRegione] = $regione->id;
+                    $regioni[$nomeRegione] = $regione->id;
                 }
 
                 // Gestione Provincia
-                $codiceProvincia = $record['Codice Provincia (Storico)(1)'];
-                if (!isset($province[$codiceProvincia])) {
+                $nomeProvincia = $values[11];
+                $chiaveProvincia = $nomeProvincia . '-' . $values[14]; // nome + sigla
+                if (!isset($province[$chiaveProvincia])) {
                     $provincia = Provincia::create([
-                        'nome' => $record['Denominazione dell\'Unità territoriale sovracomunale (valida a fini statistici)'],
-                        'codice_istat' => $codiceProvincia,
-                        'sigla' => $record['Sigla automobilistica'],
-                        'regione_id' => $regioni[$codiceRegione],
+                        'nome' => $nomeProvincia,
+                        'codice_istat' => $values[2],
+                        'sigla' => $values[14],
+                        'regione_id' => $regioni[$nomeRegione],
                     ]);
-                    $province[$codiceProvincia] = $provincia->id;
+                    $province[$chiaveProvincia] = $provincia->id;
                 }
 
                 // Gestione Comune
                 Comune::create([
-                    'nome' => $record['Denominazione in italiano'],
-                    'codice_istat' => $record['Codice Comune formato numerico'],
-                    'codice_catastale' => $record['Codice Catastale del comune'],
-                    'provincia_id' => $province[$codiceProvincia],
+                    'nome' => $values[5],
+                    'codice_istat' => $values[4],
+                    'codice_catastale' => $values[19],
+                    'provincia_id' => $province[$chiaveProvincia],
                 ]);
+
+                $count++;
             }
 
             DB::commit();
             unlink($tempFile);
 
-            $this->info('Importazione completata con successo!');
+            $this->info("Importazione completata con successo! Importati $count comuni.");
             
         } catch (\Exception $e) {
             DB::rollBack();
