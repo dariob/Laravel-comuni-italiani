@@ -9,12 +9,21 @@ class SelettoreComune extends BaseComponent
     public ?int $selectedComune = null;
     public ?int $provinciaId = null;
 
-    protected $listeners = ['provincia-selected' => 'setProvincia'];
+    protected $listeners = [
+        'provincia-selected' => 'setProvincia',
+        'regione-selected' => 'resetComune'
+    ];
 
     public function setProvincia($provinciaId)
     {
         $this->provinciaId = $provinciaId;
         $this->selectedComune = null;
+    }
+
+    public function resetComune()
+    {
+        $this->selectedComune = null;
+        $this->provinciaId = null;
     }
 
     public function getComuni()
