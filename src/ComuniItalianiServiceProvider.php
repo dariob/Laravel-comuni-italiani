@@ -15,6 +15,9 @@ class ComuniItalianiServiceProvider extends ServiceProvider
         // Register migrations
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
+        // Register views
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'comuni-italiani');
+
         // Register Livewire components
         Livewire::component('selettore-regione', SelettoreRegione::class);
         Livewire::component('selettore-provincia', SelettoreProvincia::class);
@@ -35,6 +38,11 @@ class ComuniItalianiServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/comuni-italiani.php' => config_path('comuni-italiani.php'),
             ], 'comuni-italiani-config');
+
+            // Publish views
+            $this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/comuni-italiani'),
+            ], 'comuni-italiani-views');
         }
     }
 
