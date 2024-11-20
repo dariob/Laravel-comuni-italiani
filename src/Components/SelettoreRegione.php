@@ -7,21 +7,16 @@ use DarioBarila\ComuniItaliani\Models\Regione;
 class SelettoreRegione extends BaseComponent
 {
     public ?int $selectedRegione = null;
-    public ?string $value = '';
+    public $modelValue = '';
 
     public function mount()
     {
-        if ($this->value) {
-            $regione = Regione::where('nome', $this->value)->first();
+        if ($this->modelValue) {
+            $regione = Regione::where('nome', $this->modelValue)->first();
             if ($regione) {
                 $this->selectedRegione = $regione->id;
             }
         }
-    }
-
-    public function getRegioni()
-    {
-        return Regione::orderBy('nome')->get();
     }
 
     public function updatedSelectedRegione($value)
@@ -30,10 +25,15 @@ class SelettoreRegione extends BaseComponent
         
         if ($value) {
             $regione = Regione::find($value);
-            $this->value = $regione ? $regione->nome : '';
+            $this->modelValue = $regione ? $regione->nome : '';
         } else {
-            $this->value = '';
+            $this->modelValue = '';
         }
+    }
+
+    public function getRegioni()
+    {
+        return Regione::orderBy('nome')->get();
     }
 
     public function render()

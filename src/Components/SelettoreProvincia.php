@@ -8,14 +8,14 @@ class SelettoreProvincia extends BaseComponent
 {
     public ?int $selectedProvincia = null;
     public ?int $regioneId = null;
-    public ?string $value = '';
+    public $modelValue = '';
 
     protected $listeners = ['regione-selected' => 'setRegione'];
 
     public function mount()
     {
-        if ($this->value) {
-            $provincia = Provincia::where('nome', $this->value)->first();
+        if ($this->modelValue) {
+            $provincia = Provincia::where('nome', $this->modelValue)->first();
             if ($provincia) {
                 $this->selectedProvincia = $provincia->id;
                 $this->regioneId = $provincia->regione_id;
@@ -27,7 +27,7 @@ class SelettoreProvincia extends BaseComponent
     {
         $this->regioneId = $regioneId;
         $this->selectedProvincia = null;
-        $this->value = '';
+        $this->modelValue = '';
     }
 
     public function getProvince()
@@ -47,9 +47,9 @@ class SelettoreProvincia extends BaseComponent
         
         if ($value) {
             $provincia = Provincia::find($value);
-            $this->value = $provincia ? $provincia->nome : '';
+            $this->modelValue = $provincia ? $provincia->nome : '';
         } else {
-            $this->value = '';
+            $this->modelValue = '';
         }
     }
 

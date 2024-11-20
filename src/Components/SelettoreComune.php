@@ -8,7 +8,7 @@ class SelettoreComune extends BaseComponent
 {
     public ?int $selectedComune = null;
     public ?int $provinciaId = null;
-    public ?string $value = '';
+    public $modelValue = '';
 
     protected $listeners = [
         'provincia-selected' => 'setProvincia',
@@ -17,8 +17,8 @@ class SelettoreComune extends BaseComponent
 
     public function mount()
     {
-        if ($this->value) {
-            $comune = Comune::where('nome', $this->value)->first();
+        if ($this->modelValue) {
+            $comune = Comune::where('nome', $this->modelValue)->first();
             if ($comune) {
                 $this->selectedComune = $comune->id;
                 $this->provinciaId = $comune->provincia_id;
@@ -30,14 +30,14 @@ class SelettoreComune extends BaseComponent
     {
         $this->provinciaId = $provinciaId;
         $this->selectedComune = null;
-        $this->value = '';
+        $this->modelValue = '';
     }
 
     public function resetComune()
     {
         $this->selectedComune = null;
         $this->provinciaId = null;
-        $this->value = '';
+        $this->modelValue = '';
     }
 
     public function getComuni()
@@ -57,9 +57,9 @@ class SelettoreComune extends BaseComponent
         
         if ($value) {
             $comune = Comune::find($value);
-            $this->value = $comune ? $comune->nome : '';
+            $this->modelValue = $comune ? $comune->nome : '';
         } else {
-            $this->value = '';
+            $this->modelValue = '';
         }
     }
 

@@ -2,7 +2,7 @@
     <label for="regione" class="{{ $this->getLabelClass() }}">Regione</label>
     <select 
         wire:model.live="selectedRegione" 
-        wire:model="value"
+        wire:model="modelValue"
         id="regione" 
         class="{{ $this->getSelectClass() }}"
     >
