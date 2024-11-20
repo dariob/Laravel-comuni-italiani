@@ -15,7 +15,7 @@ class SelettoreRegione extends BaseComponent
 
     public function updatedSelectedRegione($value)
     {
-        $this->dispatch('regione-selected', regione: $value);
+        $this->dispatch('regione-selected', regioneId: $value);
     }
 
     public function render()

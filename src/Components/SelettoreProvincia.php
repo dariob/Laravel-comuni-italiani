@@ -30,7 +30,7 @@ class SelettoreProvincia extends BaseComponent
 
     public function updatedSelectedProvincia($value)
     {
-        $this->dispatch('provincia-selected', provincia: $value);
+        $this->dispatch('provincia-selected', provinciaId: $value);
     }
 
     public function render()
