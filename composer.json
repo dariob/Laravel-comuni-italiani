@@ -27,7 +27,8 @@
         "orchestra/testbench": "^9.0",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-arch": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0"
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": {
@@ -36,7 +37,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "DarioBarila\\ComuniItaliani\\Tests\\": "tests"
+            "DarioBarila\\ComuniItaliani\\Tests\\": "tests",
+            "DarioBarila\\ComuniItaliani\\Database\\Factories\\": "database/factories"
         }
     },
     "scripts": {

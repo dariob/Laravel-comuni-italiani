@@ -14,4 +14,4 @@ Thumbs.db
 .php-cs-fixer.cache
 coverage.xml
 .phpunit.cache/
-/reference_materials/
+reference_materials
