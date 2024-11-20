@@ -2,7 +2,6 @@
     <label for="provincia" class="{{ $this->getLabelClass() }}">Provincia</label>
     <select 
         wire:model.live="selectedProvincia" 
-        wire:model="modelValue"
         id="provincia" 
         name="provincia"
         class="{{ $this->getSelectClass() }}" 
