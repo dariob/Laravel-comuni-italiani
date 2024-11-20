@@ -4,6 +4,7 @@
         wire:model.live="selectedRegione" 
         wire:model="modelValue"
         id="regione" 
+        name="regione"
         class="{{ $this->getSelectClass() }}"
     >
         <option value="">Seleziona una regione</option>

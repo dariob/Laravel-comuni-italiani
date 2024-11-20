@@ -4,6 +4,7 @@
         wire:model.live="selectedProvincia" 
         wire:model="modelValue"
         id="provincia" 
+        name="provincia"
         class="{{ $this->getSelectClass() }}" 
         @if(!$regioneId) disabled @endif
     >
