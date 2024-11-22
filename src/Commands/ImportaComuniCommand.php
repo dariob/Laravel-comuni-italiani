@@ -39,10 +39,12 @@ class ImportaComuniCommand extends Command
 
             DB::beginTransaction();
 
-            // Svuota le tabelle
+            // Svuota le tabelle nell'ordine corretto per rispettare le foreign key
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             Comune::truncate();
             Provincia::truncate();
             Regione::truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
             $records = $csv->getRecords();
             $regioni = [];
