@@ -18,6 +18,8 @@ class ImportaComuniCommand extends Command
     public function handle()
     {
         $this->info('Scaricamento dati ISTAT in corso...');
+        $tempFile = null;
+        $transactionStarted = false;
 
         try {
             // Scarica il file CSV
@@ -38,6 +40,7 @@ class ImportaComuniCommand extends Command
             $csv->setHeaderOffset(0);
 
             DB::beginTransaction();
+            $transactionStarted = true;
 
             // Svuota le tabelle nell'ordine corretto per rispettare le foreign key
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -94,8 +97,10 @@ class ImportaComuniCommand extends Command
             $this->info("Importazione completata con successo! Importati $count comuni.");
             
         } catch (\Exception $e) {
-            DB::rollBack();
-            if (isset($tempFile) && file_exists($tempFile)) {
+            if ($transactionStarted) {
+                DB::rollBack();
+            }
+            if ($tempFile && file_exists($tempFile)) {
                 unlink($tempFile);
             }
             $this->error('Errore durante l\'importazione: ' . $e->getMessage());
