@@ -91,18 +91,29 @@ class ImportaComuniCommand extends Command
                 $count++;
             }
 
-            DB::commit();
-            unlink($tempFile);
+            if ($transactionStarted) {
+                DB::commit();
+            }
+            
+            if ($tempFile && file_exists($tempFile)) {
+                unlink($tempFile);
+            }
 
             $this->info("Importazione completata con successo! Importati $count comuni.");
             
         } catch (\Exception $e) {
             if ($transactionStarted) {
-                DB::rollBack();
+                try {
+                    DB::rollBack();
+                } catch (\Exception $rollbackException) {
+                    // Ignora eventuali errori durante il rollback
+                }
             }
+            
             if ($tempFile && file_exists($tempFile)) {
                 unlink($tempFile);
             }
+            
             $this->error('Errore durante l\'importazione: ' . $e->getMessage());
             return 1;
         }
